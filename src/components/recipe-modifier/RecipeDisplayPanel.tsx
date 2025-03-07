@@ -2,6 +2,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { type Recipe } from "@/lib/data";
 
 interface RecipeDisplayPanelProps {
@@ -9,13 +10,19 @@ interface RecipeDisplayPanelProps {
   modifiedRecipe: Recipe | null;
   viewOriginal: boolean;
   setViewOriginal: (value: boolean) => void;
+  substitutionMode: boolean;
+  selectedIngredients: string[];
+  setSelectedIngredients: (ingredients: string[]) => void;
 }
 
 export const RecipeDisplayPanel = ({ 
   recipe, 
   modifiedRecipe, 
   viewOriginal, 
-  setViewOriginal 
+  setViewOriginal,
+  substitutionMode,
+  selectedIngredients,
+  setSelectedIngredients
 }: RecipeDisplayPanelProps) => {
   if (!recipe) {
     return (
@@ -26,6 +33,16 @@ export const RecipeDisplayPanel = ({
       </div>
     );
   }
+  
+  const displayedRecipe = viewOriginal ? recipe : (modifiedRecipe || recipe);
+
+  const toggleIngredient = (ingredient: string) => {
+    if (selectedIngredients.includes(ingredient)) {
+      setSelectedIngredients(selectedIngredients.filter(i => i !== ingredient));
+    } else {
+      setSelectedIngredients([...selectedIngredients, ingredient]);
+    }
+  };
   
   return (
     <div className="h-full flex flex-col">
@@ -66,21 +83,21 @@ export const RecipeDisplayPanel = ({
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-2xl mx-auto space-y-8">
           <div>
-            <h3 className="text-2xl font-medium mb-2">{recipe.title}</h3>
-            <p className="text-muted-foreground">{recipe.description}</p>
+            <h3 className="text-2xl font-medium mb-2">{displayedRecipe.title}</h3>
+            <p className="text-muted-foreground">{displayedRecipe.description}</p>
             
             <div className="flex flex-wrap gap-2 mt-4">
               <Badge variant="outline">
-                Prep: {recipe.prepTime} min
+                Prep: {displayedRecipe.prepTime} min
               </Badge>
               <Badge variant="outline">
-                Cook: {recipe.cookTime} min
+                Cook: {displayedRecipe.cookTime} min
               </Badge>
               <Badge variant="outline">
-                Serves: {recipe.servings}
+                Serves: {displayedRecipe.servings}
               </Badge>
               <Badge variant="outline">
-                {recipe.difficulty}
+                {displayedRecipe.difficulty}
               </Badge>
             </div>
           </div>
@@ -88,9 +105,19 @@ export const RecipeDisplayPanel = ({
           <div>
             <h4 className="font-medium mb-3 text-lg">Ingredients</h4>
             <ul className="space-y-2 pl-4">
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} className="list-disc list-outside">
-                  {ingredient}
+              {displayedRecipe.ingredients.map((ingredient, index) => (
+                <li key={index} className={cn(
+                  "list-disc list-outside flex items-center gap-2",
+                  substitutionMode && selectedIngredients.includes(ingredient) && "text-primary font-medium"
+                )}>
+                  {substitutionMode && (
+                    <Checkbox 
+                      id={`ingredient-${index}`}
+                      checked={selectedIngredients.includes(ingredient)}
+                      onCheckedChange={() => toggleIngredient(ingredient)}
+                    />
+                  )}
+                  <span className="flex-1">{ingredient}</span>
                 </li>
               ))}
             </ul>
@@ -99,7 +126,7 @@ export const RecipeDisplayPanel = ({
           <div>
             <h4 className="font-medium mb-3 text-lg">Instructions</h4>
             <ol className="space-y-4">
-              {recipe.instructions.map((instruction, index) => (
+              {displayedRecipe.instructions.map((instruction, index) => (
                 <li key={index} className="flex">
                   <span className="flex-shrink-0 flex items-center justify-center h-6 w-6 rounded-full bg-secondary text-secondary-foreground font-medium text-sm mr-3">
                     {index + 1}

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Replace } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -22,6 +22,8 @@ interface ModificationControlsPanelProps {
   isLoading: boolean;
   toggleCollectionPanel: () => void;
   isCollectionVisible: boolean;
+  substitutionMode: boolean;
+  setSubstitutionMode: (value: boolean) => void;
 }
 
 export const ModificationControlsPanel = ({ 
@@ -31,7 +33,9 @@ export const ModificationControlsPanel = ({
   selectedModifiers, 
   onModifierToggle, 
   onSubmit,
-  isLoading
+  isLoading,
+  substitutionMode,
+  setSubstitutionMode
 }: ModificationControlsPanelProps) => {
   return (
     <div className="h-full flex flex-col">
@@ -46,7 +50,9 @@ export const ModificationControlsPanel = ({
           </label>
           <Textarea
             id="custom-instructions"
-            placeholder="E.g., Make it spicier, reduce cooking time, substitute honey for sugar..."
+            placeholder={substitutionMode 
+              ? "Enter substitution instructions for the selected ingredients..." 
+              : "E.g., Make it spicier, reduce cooking time, substitute honey for sugar..."}
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             className="resize-none h-32"
@@ -54,9 +60,20 @@ export const ModificationControlsPanel = ({
         </div>
         
         <div className="space-y-3">
-          <label className="block text-sm font-medium">
-            Select Modifiers
-          </label>
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium">
+              Select Modifiers
+            </label>
+            <Button 
+              variant={substitutionMode ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setSubstitutionMode(!substitutionMode)}
+              className="flex items-center gap-1"
+            >
+              <Replace className="w-4 h-4" />
+              Substitute Ingredients
+            </Button>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <TooltipProvider>
               {modifierOptions.map(modifier => (
@@ -95,7 +112,7 @@ export const ModificationControlsPanel = ({
           ) : (
             <>
               <Sparkles className="w-4 h-4 mr-2" />
-              Modify Recipe
+              {substitutionMode ? "Substitute Ingredients" : "Modify Recipe"}
             </>
           )}
         </Button>

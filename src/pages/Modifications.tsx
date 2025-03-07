@@ -22,6 +22,8 @@ const Modifications = () => {
   const [viewOriginal, setViewOriginal] = useState(true);
   const [isCollectionVisible, setIsCollectionVisible] = useState(true);
   const [isModifierVisible, setIsModifierVisible] = useState(true);
+  const [substitutionMode, setSubstitutionMode] = useState(false);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   
   // Filter to show only favorite recipes in the collection
   const favoriteRecipes = recipes.filter(recipe => recipe.isFavorite);
@@ -38,6 +40,7 @@ const Modifications = () => {
     setSelectedRecipe(recipe);
     setModifiedRecipe(null);
     setViewOriginal(true);
+    setSelectedIngredients([]);
     setIsLeftPanelOpen(false);
   };
 
@@ -55,7 +58,12 @@ const Modifications = () => {
       return;
     }
     
-    if (selectedModifiers.length === 0 && !userInput.trim()) {
+    if (substitutionMode && selectedIngredients.length === 0) {
+      toast.error("Please select at least one ingredient to substitute");
+      return;
+    }
+    
+    if (!substitutionMode && selectedModifiers.length === 0 && !userInput.trim()) {
       toast.error("Please select at least one modifier or add custom instructions");
       return;
     }
@@ -68,10 +76,14 @@ const Modifications = () => {
       const newRecipe = {
         ...selectedRecipe,
         title: `${selectedRecipe.title} (Modified)`,
-        description: `Modified version: ${selectedModifiers.join(', ')} ${userInput}`,
+        description: substitutionMode 
+          ? `Substituted ingredients: ${selectedIngredients.join(', ')}`
+          : `Modified version: ${selectedModifiers.join(', ')} ${userInput}`,
         // In a real implementation, these would be modified by the AI
         ingredients: selectedRecipe.ingredients.map(ingredient => 
-          `Modified: ${ingredient}`
+          substitutionMode && selectedIngredients.includes(ingredient)
+            ? `Substituted: ${ingredient}`
+            : `Modified: ${ingredient}`
         ),
         instructions: selectedRecipe.instructions.map(instruction => 
           `Modified: ${instruction}`
@@ -81,11 +93,13 @@ const Modifications = () => {
       setModifiedRecipe(newRecipe);
       setViewOriginal(false);
       setIsLoading(false);
-      toast.success("Recipe modified successfully!");
+      setSubstitutionMode(false);
+      setSelectedIngredients([]);
+      toast.success(substitutionMode 
+        ? "Ingredients substituted successfully!" 
+        : "Recipe modified successfully!");
     }, 2000);
   };
-  
-  const displayedRecipe = modifiedRecipe && !viewOriginal ? modifiedRecipe : selectedRecipe;
   
   return (
     <div className="space-y-8">
@@ -175,10 +189,13 @@ const Modifications = () => {
           </div>
           
           <RecipeDisplayPanel
-            recipe={displayedRecipe}
+            recipe={selectedRecipe}
             modifiedRecipe={modifiedRecipe}
             viewOriginal={viewOriginal}
             setViewOriginal={setViewOriginal}
+            substitutionMode={substitutionMode}
+            selectedIngredients={selectedIngredients}
+            setSelectedIngredients={setSelectedIngredients}
           />
         </div>
         
@@ -195,6 +212,8 @@ const Modifications = () => {
               isLoading={isLoading}
               toggleCollectionPanel={toggleCollectionPanel}
               isCollectionVisible={isCollectionVisible}
+              substitutionMode={substitutionMode}
+              setSubstitutionMode={setSubstitutionMode}
             />
           </SheetContent>
         </Sheet>
@@ -215,6 +234,8 @@ const Modifications = () => {
               isLoading={isLoading}
               toggleCollectionPanel={toggleCollectionPanel}
               isCollectionVisible={isCollectionVisible}
+              substitutionMode={substitutionMode}
+              setSubstitutionMode={setSubstitutionMode}
             />
           </div>
         )}
