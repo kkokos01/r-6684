@@ -108,17 +108,24 @@ export const RecipeDisplayPanel = ({
             <ul className="space-y-2 pl-4">
               {displayedRecipe.ingredients.map((ingredient, index) => (
                 <li key={index} className={cn(
-                  "list-disc list-outside flex items-center gap-2",
-                  substitutionMode && selectedIngredients.includes(ingredient) && "text-primary font-medium"
+                  "list-disc list-outside flex items-start gap-2",
+                  substitutionMode && "pl-2",
+                  substitutionMode && selectedIngredients.includes(ingredient) && "bg-accent/10 -ml-2 pl-4 py-1 rounded-md"
                 )}>
                   {substitutionMode && (
                     <Checkbox 
                       id={`ingredient-${index}`}
                       checked={selectedIngredients.includes(ingredient)}
                       onCheckedChange={() => toggleIngredient(ingredient)}
+                      className="mt-0.5"
                     />
                   )}
-                  <span className="flex-1">{ingredient}</span>
+                  <span className={cn(
+                    "flex-1", 
+                    substitutionMode && selectedIngredients.includes(ingredient) && "font-medium text-accent"
+                  )}>
+                    {ingredient}
+                  </span>
                 </li>
               ))}
             </ul>
