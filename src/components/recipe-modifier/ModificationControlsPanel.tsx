@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ModifierOption {
   id: string;
@@ -57,21 +58,27 @@ export const ModificationControlsPanel = ({
             Select Modifiers
           </label>
           <div className="grid grid-cols-2 gap-2">
-            {modifierOptions.map(modifier => (
-              <Badge
-                key={modifier.id}
-                variant={selectedModifiers.includes(modifier.id) ? "default" : "outline"}
-                className={cn(
-                  "h-auto py-1.5 px-2 cursor-pointer justify-center text-xs flex flex-col items-center",
-                  selectedModifiers.includes(modifier.id) ? "bg-accent text-accent-foreground" : "hover:bg-muted"
-                )}
-                onClick={() => onModifierToggle(modifier.id)}
-                title={modifier.description}
-              >
-                <span className="font-medium">{modifier.label}</span>
-                <span className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{modifier.description}</span>
-              </Badge>
-            ))}
+            <TooltipProvider>
+              {modifierOptions.map(modifier => (
+                <Tooltip key={modifier.id} delayDuration={300}>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      variant={selectedModifiers.includes(modifier.id) ? "default" : "outline"}
+                      className={cn(
+                        "h-auto py-1.5 px-2 cursor-pointer justify-center text-xs flex items-center",
+                        selectedModifiers.includes(modifier.id) ? "bg-accent text-accent-foreground" : "hover:bg-muted"
+                      )}
+                      onClick={() => onModifierToggle(modifier.id)}
+                    >
+                      <span className="font-medium">{modifier.label}</span>
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p className="text-sm">{modifier.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </div>
         </div>
         
