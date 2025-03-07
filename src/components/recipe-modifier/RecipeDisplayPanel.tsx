@@ -51,28 +51,36 @@ export const RecipeDisplayPanel = ({
         <h2 className="text-lg font-medium">Recipe Details</h2>
         
         {modifiedRecipe && (
-          <div className="flex items-center gap-1 text-sm">
+          <div className="flex items-center gap-1 text-sm px-2 py-1 rounded-full bg-muted/30">
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className={cn(
+                "h-7 w-7 rounded-full",
+                viewOriginal && "bg-accent text-accent-foreground hover:bg-accent/90"
+              )}
               onClick={() => setViewOriginal(true)}
               disabled={viewOriginal}
+              aria-label="View original recipe"
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Original</span>
             </Button>
             
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground px-1">
               {viewOriginal ? "Original" : "Modified"}
             </span>
             
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className={cn(
+                "h-7 w-7 rounded-full",
+                !viewOriginal && "bg-accent text-accent-foreground hover:bg-accent/90"
+              )}
               onClick={() => setViewOriginal(false)}
               disabled={!viewOriginal}
+              aria-label="View modified recipe"
             >
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Modified</span>

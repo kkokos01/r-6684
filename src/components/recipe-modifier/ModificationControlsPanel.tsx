@@ -1,9 +1,9 @@
 
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Replace } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ModifierOption {
@@ -65,10 +65,10 @@ export const ModificationControlsPanel = ({
           </label>
           
           <Badge
-            variant="outline"
+            variant={substitutionMode ? "default" : "outline"}
             className={cn(
-              "h-auto py-1.5 px-2 cursor-pointer text-sm w-full justify-center flex items-center gap-2",
-              substitutionMode ? "bg-accent text-accent-foreground hover:bg-accent/90" : "hover:bg-muted"
+              "h-auto py-2 px-3 cursor-pointer text-sm w-full justify-center flex items-center gap-2",
+              substitutionMode ? "bg-accent text-accent-foreground hover:bg-accent/90" : "hover:bg-accent/20"
             )}
             onClick={() => setSubstitutionMode(!substitutionMode)}
           >
@@ -85,7 +85,7 @@ export const ModificationControlsPanel = ({
                       variant={selectedModifiers.includes(modifier.id) ? "default" : "outline"}
                       className={cn(
                         "h-auto py-1.5 px-2 cursor-pointer justify-center text-xs flex items-center",
-                        selectedModifiers.includes(modifier.id) ? "bg-accent text-accent-foreground" : "hover:bg-muted"
+                        selectedModifiers.includes(modifier.id) ? "bg-accent text-accent-foreground hover:bg-accent/90" : "hover:bg-accent/20"
                       )}
                       onClick={() => onModifierToggle(modifier.id)}
                     >
