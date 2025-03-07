@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { BookOpen, Filter, ChevronDown } from 'lucide-react';
+import { BookOpen, Filter, ChevronDown, X } from 'lucide-react';
 import { recipes, categories, Category } from '@/lib/data';
 import { RecipeCard } from '@/components/RecipeCard';
 import { Button } from '@/components/ui/button';
@@ -33,7 +32,6 @@ const Recipes = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [isFilteringFavorites, setIsFilteringFavorites] = useState(false);
   
-  // Initialize state from URL params
   useEffect(() => {
     const categoryParam = searchParams.get("category");
     const favoritesParam = searchParams.get("favorites") === "true";
@@ -47,28 +45,23 @@ const Recipes = () => {
     setSortBy(sortParam);
   }, [searchParams]);
   
-  // Apply filters and sorting
   useEffect(() => {
     let filtered = [...recipes];
     
-    // Filter by search
     if (searchResults.length > 0) {
       filtered = searchResults;
     }
     
-    // Filter by categories
     if (selectedCategories.length > 0) {
       filtered = filtered.filter(recipe => 
         recipe.categories.some(cat => selectedCategories.includes(cat))
       );
     }
     
-    // Filter by favorites
     if (isFilteringFavorites) {
       filtered = filtered.filter(recipe => recipe.isFavorite);
     }
     
-    // Apply sorting
     if (sortBy === "newest") {
       filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     } else if (sortBy === "oldest") {
@@ -79,7 +72,6 @@ const Recipes = () => {
     
     setFilteredRecipes(filtered);
     
-    // Update URL params
     const params = new URLSearchParams();
     if (selectedCategories.length === 1) {
       params.set("category", selectedCategories[0]);
@@ -201,7 +193,6 @@ const Recipes = () => {
         </div>
       </div>
       
-      {/* Active Filters */}
       {(selectedCategories.length > 0 || isFilteringFavorites) && (
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <span className="text-muted-foreground">Active filters:</span>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getRecipeById, getCategoryById } from '@/lib/data';
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,7 +56,6 @@ const RecipeDetail = () => {
       },
     });
     
-    // Reset button after delay
     setTimeout(() => {
       setAddedToMealPlan(false);
     }, 2000);
@@ -73,13 +71,11 @@ const RecipeDetail = () => {
       },
     });
     
-    // Reset button after delay
     setTimeout(() => {
       setAddedToShoppingList(false);
     }, 2000);
   };
   
-  // Get category names
   const categoryNames = recipe.categories
     .map(catId => {
       const category = getCategoryById(catId);
@@ -89,7 +85,6 @@ const RecipeDetail = () => {
   
   return (
     <div className="max-w-4xl mx-auto pb-16 space-y-8">
-      {/* Back button */}
       <Button 
         variant="ghost" 
         size="sm" 
@@ -102,7 +97,6 @@ const RecipeDetail = () => {
         </Link>
       </Button>
       
-      {/* Recipe Header */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl md:text-4xl font-medium">{recipe.title}</h1>
@@ -131,7 +125,6 @@ const RecipeDetail = () => {
         </div>
       </div>
       
-      {/* Recipe Image */}
       <div className="aspect-[16/9] w-full overflow-hidden rounded-xl">
         <img 
           src={recipe.image} 
@@ -144,7 +137,6 @@ const RecipeDetail = () => {
         />
       </div>
       
-      {/* Recipe Info and Actions */}
       <div className="flex flex-wrap justify-between gap-6">
         <div className="flex flex-wrap gap-6">
           <div className="flex items-center">
@@ -219,7 +211,6 @@ const RecipeDetail = () => {
         </div>
       </div>
       
-      {/* Recipe Content */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <h2 className="text-xl font-medium mb-4">Ingredients</h2>
