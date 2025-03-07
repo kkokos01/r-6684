@@ -2,6 +2,12 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { type Recipe } from "@/lib/data";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 
 interface RecipeCollectionPanelProps {
   recipes: Recipe[];
@@ -32,7 +38,14 @@ export const RecipeCollectionPanel = ({
                   selectedRecipe?.id === recipe.id && "bg-primary/5 border-l-4 border-l-primary"
                 )}
               >
-                <h3 className="text-sm font-medium line-clamp-1">{recipe.title}</h3>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <h3 className="text-sm font-medium line-clamp-1">{recipe.title}</h3>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{recipe.title}</p>
+                  </TooltipContent>
+                </Tooltip>
                 <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
                   {recipe.prepTime + recipe.cookTime} min • {recipe.servings} servings
                 </p>
