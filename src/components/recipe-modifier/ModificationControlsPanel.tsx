@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface ModifierOption {
   id: string;
@@ -55,24 +56,21 @@ export const ModificationControlsPanel = ({
           <label className="block text-sm font-medium">
             Select Modifiers
           </label>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {modifierOptions.map(modifier => (
-              <Button
+              <Badge
                 key={modifier.id}
                 variant={selectedModifiers.includes(modifier.id) ? "default" : "outline"}
-                size="sm"
                 className={cn(
-                  "h-auto py-2 justify-start",
-                  selectedModifiers.includes(modifier.id) && "bg-accent text-accent-foreground"
+                  "h-auto py-1.5 px-2 cursor-pointer justify-center text-xs flex flex-col items-center",
+                  selectedModifiers.includes(modifier.id) ? "bg-accent text-accent-foreground" : "hover:bg-muted"
                 )}
                 onClick={() => onModifierToggle(modifier.id)}
                 title={modifier.description}
               >
-                <span className="text-left">
-                  <span className="block font-medium">{modifier.label}</span>
-                  <span className="text-xs text-muted-foreground block mt-1">{modifier.description}</span>
-                </span>
-              </Button>
+                <span className="font-medium">{modifier.label}</span>
+                <span className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{modifier.description}</span>
+              </Badge>
             ))}
           </div>
         </div>

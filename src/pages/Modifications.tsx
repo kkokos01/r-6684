@@ -144,8 +144,10 @@ const Modifications = () => {
         <div className={cn(
           "md:transition-all md:duration-300",
           isCollectionVisible && isModifierVisible
-            ? "md:w-3/5 lg:w-3/5" 
-            : isCollectionVisible || isModifierVisible
+            ? "md:w-2/5 lg:w-2/5" 
+            : !isCollectionVisible && isModifierVisible
+              ? "md:w-2/3 lg:w-2/3"
+            : isCollectionVisible && !isModifierVisible
               ? "md:w-4/5 lg:w-4/5"
               : "md:w-full lg:w-full",
           "bg-muted/20 rounded-lg border border-muted/50 flex-1"
@@ -199,7 +201,10 @@ const Modifications = () => {
         
         {/* Desktop Right Panel - Collapsible */}
         {isModifierVisible && (
-          <div className="hidden md:block md:w-1/5 lg:w-1/5 md:ml-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300">
+          <div className={cn(
+            "hidden md:block md:ml-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300",
+            isCollectionVisible ? "md:w-1/5 lg:w-1/5" : "md:w-1/3 lg:w-1/3"
+          )}>
             <ModificationControlsPanel
               userInput={userInput}
               setUserInput={setUserInput}
