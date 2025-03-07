@@ -63,13 +63,13 @@ export const RecipeDisplayPanel = ({
         )}
       </div>
       
-      <div className="flex-1 overflow-auto p-4">
-        <div className="space-y-6">
+      <div className="flex-1 overflow-auto p-6">
+        <div className="max-w-2xl mx-auto space-y-8">
           <div>
             <h3 className="text-2xl font-medium mb-2">{recipe.title}</h3>
             <p className="text-muted-foreground">{recipe.description}</p>
             
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 mt-4">
               <Badge variant="outline">
                 Prep: {recipe.prepTime} min
               </Badge>
@@ -86,7 +86,7 @@ export const RecipeDisplayPanel = ({
           </div>
           
           <div>
-            <h4 className="font-medium mb-3">Ingredients</h4>
+            <h4 className="font-medium mb-3 text-lg">Ingredients</h4>
             <ul className="space-y-2 pl-4">
               {recipe.ingredients.map((ingredient, index) => (
                 <li key={index} className="list-disc list-outside">
@@ -97,8 +97,8 @@ export const RecipeDisplayPanel = ({
           </div>
           
           <div>
-            <h4 className="font-medium mb-3">Instructions</h4>
-            <ol className="space-y-3">
+            <h4 className="font-medium mb-3 text-lg">Instructions</h4>
+            <ol className="space-y-4">
               {recipe.instructions.map((instruction, index) => (
                 <li key={index} className="flex">
                   <span className="flex-shrink-0 flex items-center justify-center h-6 w-6 rounded-full bg-secondary text-secondary-foreground font-medium text-sm mr-3">

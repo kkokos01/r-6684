@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Sparkles, PanelLeft } from 'lucide-react';
+import { Sparkles, PanelLeft, PanelRight } from 'lucide-react';
 import { recipes } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -21,6 +21,7 @@ const Modifications = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(true);
   const [isCollectionVisible, setIsCollectionVisible] = useState(true);
+  const [isModifierVisible, setIsModifierVisible] = useState(true);
   
   // Filter to show only favorite recipes in the collection
   const favoriteRecipes = recipes.filter(recipe => recipe.isFavorite);
@@ -42,6 +43,10 @@ const Modifications = () => {
 
   const toggleCollectionPanel = () => {
     setIsCollectionVisible(prev => !prev);
+  };
+  
+  const toggleModifierPanel = () => {
+    setIsModifierVisible(prev => !prev);
   };
   
   const handleSubmit = () => {
@@ -89,15 +94,6 @@ const Modifications = () => {
           <Sparkles className="h-6 w-6 mr-3" />
           <h1 className="text-3xl font-medium">Recipe Modifications</h1>
         </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleCollectionPanel}
-          className="hidden md:flex"
-          aria-label="Toggle collection panel"
-        >
-          <PanelLeft className={cn("h-5 w-5", !isCollectionVisible && "rotate-180")} />
-        </Button>
       </div>
       
       <div className="relative flex flex-col md:flex-row">
@@ -112,14 +108,14 @@ const Modifications = () => {
             Your Collection
           </Button>
           
-          {modifiedRecipe && (
-            <Button 
-              variant="outline" 
-              onClick={() => setIsRightPanelOpen(true)}
-            >
-              View Recipe
-            </Button>
-          )}
+          <Button 
+            variant="outline" 
+            onClick={() => setIsRightPanelOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <PanelRight className="h-4 w-4" />
+            Modify Recipe
+          </Button>
         </div>
         
         {/* Left Panel - Recipe Collection (Sliding on mobile) */}
@@ -135,7 +131,7 @@ const Modifications = () => {
         
         {/* Desktop Left Panel - Collapsible */}
         {isCollectionVisible && (
-          <div className="hidden md:block md:w-1/4 lg:w-1/5 md:mr-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300">
+          <div className="hidden md:block md:w-1/5 lg:w-1/5 md:mr-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300">
             <RecipeCollectionPanel 
               recipes={favoriteRecipes}
               selectedRecipe={selectedRecipe}
@@ -144,46 +140,38 @@ const Modifications = () => {
           </div>
         )}
         
-        {/* Middle Panel - Modification Controls */}
+        {/* Center Panel - Recipe Display */}
         <div className={cn(
           "md:transition-all md:duration-300",
-          isCollectionVisible 
-            ? "md:w-1/2 lg:w-2/5" 
-            : "md:w-3/5 lg:w-1/2",
-          "bg-muted/20 rounded-lg border border-muted/50 p-6"
+          isCollectionVisible && isModifierVisible
+            ? "md:w-3/5 lg:w-3/5" 
+            : isCollectionVisible || isModifierVisible
+              ? "md:w-4/5 lg:w-4/5"
+              : "md:w-full lg:w-full",
+          "bg-muted/20 rounded-lg border border-muted/50 flex-1"
         )}>
-          <ModificationControlsPanel
-            userInput={userInput}
-            setUserInput={setUserInput}
-            modifierOptions={modifierOptions}
-            selectedModifiers={selectedModifiers}
-            onModifierToggle={handleModifierToggle}
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-            toggleCollectionPanel={toggleCollectionPanel}
-            isCollectionVisible={isCollectionVisible}
-          />
-        </div>
-        
-        {/* Right Panel - Recipe Display (Sliding on mobile) */}
-        <Sheet open={isRightPanelOpen} onOpenChange={setIsRightPanelOpen}>
-          <SheetContent side="right" className="w-full sm:max-w-md md:hidden p-0">
-            <RecipeDisplayPanel
-              recipe={displayedRecipe}
-              modifiedRecipe={modifiedRecipe}
-              viewOriginal={viewOriginal}
-              setViewOriginal={setViewOriginal}
-            />
-          </SheetContent>
-        </Sheet>
-        
-        {/* Desktop Right Panel - Always visible on desktop */}
-        <div className={cn(
-          "hidden md:block md:ml-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300",
-          isCollectionVisible 
-            ? "md:w-1/4 lg:w-2/5"
-            : "md:w-2/5 lg:w-1/2" 
-        )}>
+          <div className="flex justify-between p-2 bg-muted/20 border-b border-muted/50">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleCollectionPanel}
+              className="hidden md:flex"
+              aria-label="Toggle collection panel"
+            >
+              <PanelLeft className={cn("h-5 w-5", !isCollectionVisible && "rotate-180")} />
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleModifierPanel}
+              className="hidden md:flex"
+              aria-label="Toggle modifier panel"
+            >
+              <PanelRight className={cn("h-5 w-5", !isModifierVisible && "rotate-180")} />
+            </Button>
+          </div>
+          
           <RecipeDisplayPanel
             recipe={displayedRecipe}
             modifiedRecipe={modifiedRecipe}
@@ -191,6 +179,40 @@ const Modifications = () => {
             setViewOriginal={setViewOriginal}
           />
         </div>
+        
+        {/* Right Panel - Modification Controls (Sliding on mobile) */}
+        <Sheet open={isRightPanelOpen} onOpenChange={setIsRightPanelOpen}>
+          <SheetContent side="right" className="w-full sm:max-w-md md:hidden p-0">
+            <ModificationControlsPanel
+              userInput={userInput}
+              setUserInput={setUserInput}
+              modifierOptions={modifierOptions}
+              selectedModifiers={selectedModifiers}
+              onModifierToggle={handleModifierToggle}
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              toggleCollectionPanel={toggleCollectionPanel}
+              isCollectionVisible={isCollectionVisible}
+            />
+          </SheetContent>
+        </Sheet>
+        
+        {/* Desktop Right Panel - Collapsible */}
+        {isModifierVisible && (
+          <div className="hidden md:block md:w-1/5 lg:w-1/5 md:ml-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300">
+            <ModificationControlsPanel
+              userInput={userInput}
+              setUserInput={setUserInput}
+              modifierOptions={modifierOptions}
+              selectedModifiers={selectedModifiers}
+              onModifierToggle={handleModifierToggle}
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              toggleCollectionPanel={toggleCollectionPanel}
+              isCollectionVisible={isCollectionVisible}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
