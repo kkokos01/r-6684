@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Sparkles, ChevronLeft, ChevronRight, PanelLeft } from 'lucide-react';
 import { recipes } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,7 @@ const Modifications = () => {
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(true);
+  const [isCollectionVisible, setIsCollectionVisible] = useState(true);
   
   // Filter to show only favorite recipes in the collection
   const favoriteRecipes = recipes.filter(recipe => recipe.isFavorite);
@@ -52,6 +54,10 @@ const Modifications = () => {
     setModifiedRecipe(null);
     setViewOriginal(true);
     setIsLeftPanelOpen(false);
+  };
+
+  const toggleCollectionPanel = () => {
+    setIsCollectionVisible(prev => !prev);
   };
   
   const handleSubmit = () => {
@@ -94,9 +100,20 @@ const Modifications = () => {
   
   return (
     <div className="space-y-8">
-      <div className="flex items-center">
-        <Sparkles className="h-6 w-6 mr-3" />
-        <h1 className="text-3xl font-medium">Recipe Modifications</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Sparkles className="h-6 w-6 mr-3" />
+          <h1 className="text-3xl font-medium">Recipe Modifications</h1>
+        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleCollectionPanel}
+          className="hidden md:flex"
+          aria-label="Toggle collection panel"
+        >
+          <PanelLeft className={cn("h-5 w-5", !isCollectionVisible && "rotate-180")} />
+        </Button>
       </div>
       
       <div className="relative flex flex-col md:flex-row">
@@ -105,7 +122,9 @@ const Modifications = () => {
           <Button 
             variant="outline" 
             onClick={() => setIsLeftPanelOpen(true)}
+            className="flex items-center gap-2"
           >
+            <PanelLeft className="h-4 w-4" />
             Your Collection
           </Button>
           
@@ -130,17 +149,25 @@ const Modifications = () => {
           </SheetContent>
         </Sheet>
         
-        {/* Desktop Left Panel - Always visible on desktop */}
-        <div className="hidden md:block md:w-1/4 lg:w-1/5 md:mr-4 overflow-auto border border-muted/50 rounded-lg">
-          <RecipeCollectionPanel 
-            recipes={favoriteRecipes}
-            selectedRecipe={selectedRecipe}
-            onSelect={handleRecipeSelect}
-          />
-        </div>
+        {/* Desktop Left Panel - Collapsible */}
+        {isCollectionVisible && (
+          <div className="hidden md:block md:w-1/4 lg:w-1/5 md:mr-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300">
+            <RecipeCollectionPanel 
+              recipes={favoriteRecipes}
+              selectedRecipe={selectedRecipe}
+              onSelect={handleRecipeSelect}
+            />
+          </div>
+        )}
         
         {/* Middle Panel - Modification Controls */}
-        <div className="md:w-1/2 lg:w-2/5 bg-muted/20 rounded-lg border border-muted/50 p-6">
+        <div className={cn(
+          "md:transition-all md:duration-300",
+          isCollectionVisible 
+            ? "md:w-1/2 lg:w-2/5" 
+            : "md:w-3/5 lg:w-1/2",
+          "bg-muted/20 rounded-lg border border-muted/50 p-6"
+        )}>
           <ModificationControlsPanel
             userInput={userInput}
             setUserInput={setUserInput}
@@ -149,6 +176,8 @@ const Modifications = () => {
             onModifierToggle={handleModifierToggle}
             onSubmit={handleSubmit}
             isLoading={isLoading}
+            toggleCollectionPanel={toggleCollectionPanel}
+            isCollectionVisible={isCollectionVisible}
           />
         </div>
         
@@ -165,7 +194,12 @@ const Modifications = () => {
         </Sheet>
         
         {/* Desktop Right Panel - Always visible on desktop */}
-        <div className="hidden md:block md:w-1/4 lg:w-2/5 md:ml-4 overflow-auto border border-muted/50 rounded-lg">
+        <div className={cn(
+          "hidden md:block md:ml-4 overflow-auto border border-muted/50 rounded-lg transition-all duration-300",
+          isCollectionVisible 
+            ? "md:w-1/4 lg:w-2/5"
+            : "md:w-2/5 lg:w-1/2" 
+        )}>
           <RecipeDisplayPanel
             recipe={displayedRecipe}
             modifiedRecipe={modifiedRecipe}
@@ -234,7 +268,9 @@ const ModificationControlsPanel = ({
   selectedModifiers, 
   onModifierToggle, 
   onSubmit,
-  isLoading
+  isLoading,
+  toggleCollectionPanel,
+  isCollectionVisible
 }: { 
   userInput: string, 
   setUserInput: (value: string) => void, 
@@ -242,11 +278,22 @@ const ModificationControlsPanel = ({
   selectedModifiers: string[],
   onModifierToggle: (id: string) => void,
   onSubmit: () => void,
-  isLoading: boolean
+  isLoading: boolean,
+  toggleCollectionPanel: () => void,
+  isCollectionVisible: boolean
 }) => {
   return (
     <div className="space-y-6">
-      <div className="text-center">
+      <div className="text-center relative">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleCollectionPanel}
+          className="md:hidden absolute left-0 top-0"
+          aria-label="Toggle collection panel"
+        >
+          <PanelLeft className={cn("h-5 w-5", !isCollectionVisible && "rotate-180")} />
+        </Button>
         <h2 className="text-xl font-medium mb-2">Modify Your Recipe</h2>
         <p className="text-muted-foreground">
           Select modifiers and add custom instructions to transform your recipe
