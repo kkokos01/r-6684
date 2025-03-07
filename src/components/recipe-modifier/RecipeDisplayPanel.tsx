@@ -1,0 +1,116 @@
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { type Recipe } from "@/lib/data";
+
+interface RecipeDisplayPanelProps {
+  recipe: Recipe | null;
+  modifiedRecipe: Recipe | null;
+  viewOriginal: boolean;
+  setViewOriginal: (value: boolean) => void;
+}
+
+export const RecipeDisplayPanel = ({ 
+  recipe, 
+  modifiedRecipe, 
+  viewOriginal, 
+  setViewOriginal 
+}: RecipeDisplayPanelProps) => {
+  if (!recipe) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 h-full text-center">
+        <p className="text-muted-foreground">
+          Select a recipe to view and modify
+        </p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="h-full flex flex-col">
+      <div className="px-4 py-3 border-b border-muted/50 bg-muted/20 flex items-center justify-between">
+        <h2 className="text-lg font-medium">Recipe Details</h2>
+        
+        {modifiedRecipe && (
+          <div className="flex items-center gap-1 text-sm">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setViewOriginal(true)}
+              disabled={viewOriginal}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Original</span>
+            </Button>
+            
+            <span className="text-xs text-muted-foreground">
+              {viewOriginal ? "Original" : "Modified"}
+            </span>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setViewOriginal(false)}
+              disabled={!viewOriginal}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Modified</span>
+            </Button>
+          </div>
+        )}
+      </div>
+      
+      <div className="flex-1 overflow-auto p-4">
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-2xl font-medium mb-2">{recipe.title}</h3>
+            <p className="text-muted-foreground">{recipe.description}</p>
+            
+            <div className="flex flex-wrap gap-2 mt-3">
+              <Badge variant="outline">
+                Prep: {recipe.prepTime} min
+              </Badge>
+              <Badge variant="outline">
+                Cook: {recipe.cookTime} min
+              </Badge>
+              <Badge variant="outline">
+                Serves: {recipe.servings}
+              </Badge>
+              <Badge variant="outline">
+                {recipe.difficulty}
+              </Badge>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="font-medium mb-3">Ingredients</h4>
+            <ul className="space-y-2 pl-4">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index} className="list-disc list-outside">
+                  {ingredient}
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="font-medium mb-3">Instructions</h4>
+            <ol className="space-y-3">
+              {recipe.instructions.map((instruction, index) => (
+                <li key={index} className="flex">
+                  <span className="flex-shrink-0 flex items-center justify-center h-6 w-6 rounded-full bg-secondary text-secondary-foreground font-medium text-sm mr-3">
+                    {index + 1}
+                  </span>
+                  <p>{instruction}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
