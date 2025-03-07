@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Search, Calendar, ShoppingCart, Menu, X, Magic } from 'lucide-react';
+import { Home, BookOpen, Search, Calendar, ShoppingCart, Menu, X, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -28,7 +28,7 @@ export function Navbar() {
     { to: '/', label: 'Home', icon: Home },
     { to: '/recipes', label: 'Recipes', icon: BookOpen },
     { to: '/search', label: 'Search', icon: Search },
-    { to: '/modifications', label: 'Modifications', icon: Magic },
+    { to: '/modifications', label: 'Modifications', icon: Sparkles },
     { to: '/meal-planner', label: 'Meal Planner', icon: Calendar },
     { to: '/shopping-list', label: 'Shopping List', icon: ShoppingCart }
   ];

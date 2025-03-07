@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Magic, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { recipes } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -96,7 +95,7 @@ const Modifications = () => {
   return (
     <div className="space-y-8">
       <div className="flex items-center">
-        <Magic className="h-6 w-6 mr-3" />
+        <Sparkles className="h-6 w-6 mr-3" />
         <h1 className="text-3xl font-medium">Recipe Modifications</h1>
       </div>
       
