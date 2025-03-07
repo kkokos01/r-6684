@@ -12,6 +12,7 @@ import Categories from "./pages/Categories";
 import MealPlanner from "./pages/MealPlanner";
 import ShoppingList from "./pages/ShoppingList";
 import Search from "./pages/Search";
+import Modifications from "./pages/Modifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/categories" element={<Categories />} />
               <Route path="/category/:id" element={<Categories />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/modifications" element={<Modifications />} />
               <Route path="/meal-planner" element={<MealPlanner />} />
               <Route path="/shopping-list" element={<ShoppingList />} />
               <Route path="*" element={<NotFound />} />
