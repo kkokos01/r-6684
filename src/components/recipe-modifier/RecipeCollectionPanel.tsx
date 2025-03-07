@@ -32,8 +32,8 @@ export const RecipeCollectionPanel = ({
                   selectedRecipe?.id === recipe.id && "bg-primary/5 border-l-4 border-l-primary"
                 )}
               >
-                <h3 className="font-medium line-clamp-1">{recipe.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+                <h3 className="text-sm font-medium line-clamp-1">{recipe.title}</h3>
+                <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
                   {recipe.prepTime + recipe.cookTime} min • {recipe.servings} servings
                 </p>
               </button>
