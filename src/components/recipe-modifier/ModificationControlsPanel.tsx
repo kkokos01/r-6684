@@ -65,12 +65,14 @@ export const ModificationControlsPanel = ({
           </label>
           
           <Button 
-            variant={substitutionMode ? "default" : "outline"}
+            variant="outline"
             size="lg"
             onClick={() => setSubstitutionMode(!substitutionMode)}
             className={cn(
               "w-full flex items-center justify-center gap-2 transition-all",
-              substitutionMode ? "bg-accent text-accent-foreground" : "hover:bg-muted"
+              substitutionMode 
+                ? "bg-accent text-accent-foreground hover:bg-accent/90" 
+                : "hover:bg-muted"
             )}
           >
             <Replace className="w-5 h-5" />
