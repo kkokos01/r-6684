@@ -64,20 +64,17 @@ export const ModificationControlsPanel = ({
             Select Modifiers
           </label>
           
-          <Button 
+          <Badge
             variant="outline"
-            size="lg"
-            onClick={() => setSubstitutionMode(!substitutionMode)}
             className={cn(
-              "w-full flex items-center justify-center gap-2 transition-all",
-              substitutionMode 
-                ? "bg-accent text-accent-foreground hover:bg-accent/90" 
-                : "hover:bg-muted"
+              "h-auto py-1.5 px-2 cursor-pointer text-sm w-full justify-center flex items-center gap-2",
+              substitutionMode ? "bg-accent text-accent-foreground hover:bg-accent/90" : "hover:bg-muted"
             )}
+            onClick={() => setSubstitutionMode(!substitutionMode)}
           >
             <Replace className="w-5 h-5" />
-            Substitute Ingredients
-          </Button>
+            <span className="font-medium">Substitute Ingredients</span>
+          </Badge>
           
           <div className="grid grid-cols-2 gap-2">
             <TooltipProvider>
