@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { type Recipe } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 interface RecipeDisplayPanelProps {
   recipe: Recipe | null;
